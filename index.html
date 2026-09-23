@@ -19,7 +19,7 @@
       <main class="hero">
         <section>
           <div class="eyebrow">Tomorrow is the magic</div>
-          <h1>Happy 18th, <span>beautiful soul</span></h1>
+          <h1>Happy 18th, <span>my beautiful baby/dragon</span></h1>
           <p class="subtitle">
             Eighteen years of sparkle, laughter, grace, and love — and I still can’t believe how lucky I am to know you.
             The world feels brighter with you in it.
@@ -71,25 +71,25 @@
       </section>
 
       <section class="reasons">
-        <h2 class="section-title">Why you’re my favorite girl</h2>
+        <h2 class="section-title">The evolution of this cutie dragon of mine.</h2>
 
         <div class="shuffle-wrap">
           <div class="shuffle-deck" id="shuffleDeck">
-            <article class="memory-card active" data-caption="Us, in our favorite kind of magic.">
-              <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80" alt="Memory 1" />
-              <div class="memory-card-label">Us, in our favorite kind of magic.</div>
+            <article class="memory-card active" data-caption="cutie dragon era">
+              <img src="dragon.jpg" alt="baby pic" />
+              <div class="memory-card-label">This is the beginning of this beautiful dragon in life.</div>
             </article>
-            <article class="memory-card" data-caption="Your smile makes everything feel warm.">
-              <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80" alt="Memory 2" />
-              <div class="memory-card-label">Your smile makes everything feel warm.</div>
+            <article class="memory-card" data-caption="This is when she started to grow into her own amazing self.">
+              <img src="slight_dragon.jpg" alt="slight dragon pic" />
+              <div class="memory-card-label">This is when she started to grow into her own amazing self.</div>
             </article>
-            <article class="memory-card" data-caption="The kind of memories I never want to lose.">
-              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80" alt="Memory 3" />
-              <div class="memory-card-label">The kind of memories I never want to lose.</div>
+            <article class="memory-card" data-caption="This is when she was in a good mood.">
+              <img src="goodmood_dragon.jpg" alt="moderate dragon pic" />
+              <div class="memory-card-label">This is when she was in a good mood.</div>
             </article>
-            <article class="memory-card" data-caption="Always choosing you, always loving you.">
-              <img src="https://images.unsplash.com/photo-1525201548942-d8732f6617a0?auto=format&fit=crop&w=1200&q=80" alt="Memory 4" />
-              <div class="memory-card-label">Always choosing you, always loving you.</div>
+            <article class="memory-card" data-caption="This is when she was with her tamer.">
+              <img src="with_tamer.jpg" alt="full dragon pic with her tamer" />
+              <div class="memory-card-label">This is when she was with her tamer.</div>
             </article>
           </div>
 
@@ -130,34 +130,46 @@
         revealBtn.textContent = messageBox.classList.contains('show') ? 'Hide the note' : 'Reveal the love note';
       });
 
-      const deckCards = Array.from(document.querySelectorAll('.memory-card'));
+      const shuffleDeck = document.getElementById('shuffleDeck');
+      const deckCards = Array.from(shuffleDeck.querySelectorAll('.memory-card'));
       const shuffleBtn = document.getElementById('shuffleBtn');
 
       function shuffleCards() {
-        const cards = [...deckCards];
+        const cards = Array.from(shuffleDeck.querySelectorAll('.memory-card'));
         const activeCard = cards.find((card) => card.classList.contains('active')) || cards[0];
         const rest = cards.filter((card) => card !== activeCard);
-        const shuffled = [...rest];
+        let shuffled = [...rest];
 
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
+        do {
+          for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+          }
+        } while (shuffled.every((card, index) => card === rest[index]));
+
+        shuffleDeck.classList.remove('is-shuffling');
+        void shuffleDeck.offsetWidth;
+        shuffleDeck.classList.add('is-shuffling');
 
         const reordered = [activeCard, ...shuffled];
 
         reordered.forEach((card, index) => {
+          const offsetX = index === 0 ? 0 : (index - 1) * 30;
+          const offsetY = index * 18;
+          const rotation = index === 0 ? 0 : (index - 1) * 12;
+
           card.style.zIndex = String(index + 1);
-          card.style.transform = `translate(${(index - 1) * 18}px, ${index * 12}px) rotate(${(index - 1) * 5}deg)`;
-          card.style.opacity = index === 0 ? '1' : '0.92';
+          card.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${rotation}deg)`;
+          card.style.opacity = index === 0 ? '1' : '0.9';
           card.classList.toggle('active', index === 0);
+          const label = card.querySelector('.memory-card-label');
+          if (label) {
+            label.textContent = card.dataset.caption || 'My favorite memory';
+          }
+          shuffleDeck.appendChild(card);
         });
 
-        const frontCard = reordered[0];
-        const frontCardLabel = frontCard.querySelector('.memory-card-label');
-        if (frontCardLabel) {
-          frontCardLabel.textContent = frontCard.dataset.caption;
-        }
+        setTimeout(() => shuffleDeck.classList.remove('is-shuffling'), 700);
       }
 
       deckCards.forEach((card) => {
